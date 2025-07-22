@@ -1,0 +1,311 @@
+/* 기본 스타일 설정 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Noto Sans KR', sans-serif;
+}
+
+body {
+    background-color: #f8e8f8; /* 연한 핑크 배경 */
+    line-height: 1.6;
+    color: #555;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 0;
+}
+
+/* 헤더 영역 */
+.header {
+    background-color: #e8f4ff; /* 연한 하늘색 배경 */
+    padding: 20px;
+    border-radius: 20px 20px 0 0;
+    position: relative;
+    overflow: hidden;
+    text-align: center;
+}
+
+h1 {
+    margin-bottom: 15px;
+    color: #6c88a4; /* 부드러운 파랑 */
+    padding-bottom: 10px;
+    font-size: 1.8rem;
+    position: relative;
+    display: inline-block;
+}
+
+h1:after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 10%;
+    width: 80%;
+    height: 2px;
+    background-color: #acd6f8; /* 연한 파랑 */
+}
+
+.section-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 15px;
+    color: #7a8ca0; /* 부드러운 슬레이트 블루 */
+    font-size: 0.95rem;
+}
+
+.section-label:before {
+    content: "";
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    background-color: #acd6f8; /* 연한 파랑 */
+    border-radius: 50%;
+}
+
+h2 {
+    color: #6c88a4; /* 부드러운 파랑 */
+    margin-bottom: 12px;
+    font-size: 1.1rem;
+}
+
+/* 메인 콘텐츠 영역 */
+.main-content {
+    background-color: #e8f8ff; /* 연한 하늘색 배경 */
+    padding: 20px;
+    border-radius: 0;
+}
+
+.categories {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.category-group {
+    background-color: #fafcff; /* 매우 연한 하늘색 */
+    border-radius: 15px;
+    padding: 15px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+    border: 1px solid #e6f0fa; /* 매우 연한 테두리 */
+    transition: transform 0.2s ease;
+}
+
+.category-group:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+ul {
+    list-style-type: none;
+}
+
+li {
+    margin-bottom: 8px;
+}
+
+.efficacy-btn {
+    background-color: #f6f9ff; /* 매우 연한 블루 */
+    border: 1px solid #e6f0fa;
+    padding: 8px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    width: 100%;
+    text-align: left;
+    transition: all 0.2s ease;
+    font-size: 0.95rem;
+    color: #5a7a9a; /* 중간 톤의 블루 */
+}
+
+.efficacy-btn:hover {
+    background-color: #e6f0fa; /* 조금 더 진한 배경색 */
+    transform: translateY(-1px);
+}
+
+.efficacy-btn.active {
+    background-color: #b4ddff; /* 밝은 파스텔 블루 */
+    color: #4d6985; /* 진한 블루 */
+    border-color: #a0d0ff;
+    font-weight: 500;
+}
+
+/* 결과 영역 */
+.results-section {
+    background-color: #f0f8fb; /* 연한 청록색 배경 */
+    padding: 20px;
+    border-radius: 0 0 20px 20px;
+}
+
+.results-container {
+    background-color: #fafcff; /* 매우 연한 하늘색 */
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 1px 8px rgba(0,0,0,0.03);
+}
+
+.selected-info {
+    margin-bottom: 15px;
+    padding: 10px 15px;
+    border-radius: 10px;
+    color: #5a7a9a; /* 중간 톤의 블루 */
+    font-size: 1rem;
+    background-color: #e6f0fa; /* 연한 하늘색 */
+    border-left: 3px solid #acd6f8; /* 연한 파랑 */
+    display: flex;
+    align-items: center;
+}
+
+.selected-info-icon {
+    margin-right: 10px;
+    font-size: 1.3rem;
+}
+
+.food-results {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.food-item {
+    background-color: #f7faff; /* 매우 연한 파랑 */
+    border-radius: 12px;
+    padding: 15px;
+    font-size: 0.95rem;
+    color: #5a7a9a; /* 중간 톤의 블루 */
+    border-left: 3px solid #b4ddff; /* 연한 파랑 */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.03);
+}
+
+.food-item:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    background-color: #f0f7ff; /* 조금 더 진한 배경색 */
+}
+
+.food-item.active {
+    background-color: #e6f0fa; /* 연한 하늘색 */
+    border-left: 3px solid #7cb9f0; /* 중간 톤의 파랑 */
+}
+
+.loading {
+    text-align: center;
+    margin: 20px 0;
+    display: none;
+    font-style: italic;
+    color: #7a8ca0; /* 부드러운 슬레이트 블루 */
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 25px;
+    gap: 5px;
+}
+
+.pagination button {
+    padding: 8px 15px;
+    border: 1px solid #e6f0fa;
+    background-color: #f7faff; /* 매우 연한 파랑 */
+    cursor: pointer;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    color: #5a7a9a; /* 중간 톤의 블루 */
+}
+
+.pagination button.active {
+    background-color: #b4ddff; /* 밝은 파스텔 블루 */
+    color: #4d6985; /* 진한 블루 */
+    border-color: #a0d0ff;
+}
+
+.pagination button:hover:not(.active) {
+    background-color: #e6f0fa; /* 연한 하늘색 */
+    transform: translateY(-2px);
+}
+
+.error-message {
+    color: #e57b7b; /* 부드러운 빨강 */
+    text-align: center;
+    padding: 20px;
+    background-color: #fee8e8; /* 연한 분홍색 */
+    border-radius: 10px;
+    margin-top: 20px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.03);
+}
+
+.api-info {
+    margin-top: 15px;
+    color: #8a9bab; /* 연한 슬레이트 */
+    font-size: 0.85rem;
+    font-style: italic;
+    text-align: center;
+}
+
+/* 논문 정보 영역 */
+.thesis-container {
+    margin-top: 25px;
+    border-top: 1px dashed #d0e4f5; /* 매우 연한 파랑 */
+    padding-top: 20px;
+    display: none;
+}
+
+.thesis-list {
+    margin-top: 15px;
+}
+
+.thesis-item {
+    background-color: #f7faff; /* 매우 연한 파랑 */
+    border-radius: 12px;
+    padding: 18px;
+    margin-bottom: 15px;
+    border-left: 3px solid #b4ddff; /* 연한 파랑 */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.03);
+}
+
+.thesis-title {
+    font-weight: bold;
+    margin-bottom: 8px;
+    color: #4d6985; /* 진한 블루 */
+}
+
+.thesis-details {
+    color: #5a7a9a; /* 중간 톤의 블루 */
+    font-size: 0.9rem;
+}
+
+.thesis-year {
+    color: #5a7a9a; /* 중간 톤의 블루 */
+    font-weight: bold;
+    margin-bottom: 8px;
+    display: inline-block;
+    padding: 3px 8px;
+    background-color: #e6f0fa; /* 연한 하늘색 */
+    border-radius: 4px;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+    .categories {
+        grid-template-columns: 1fr;
+    }
+    
+    .food-results {
+        grid-template-columns: 1fr;
+    }
+} {
+        grid-template-columns: 1fr 1fr;
+    }
+    
+    .food-results {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    .categories
