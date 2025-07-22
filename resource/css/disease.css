@@ -1,0 +1,441 @@
+:root {
+    --primary-color: #8cb9d7;
+    --primary-dark: #6a9bbc;
+    --primary-light: #e8f4ff;
+    --secondary-color: #9edbdb;
+    --accent-color: #b2d1f0;
+    --background-color: #f7fafc;
+    --card-color: #ffffff;
+    --border-color: #e9edf2;
+    --text-color: #5d6b7a;
+    --text-light: #8999aa;
+    --danger-color: #f19a9a;
+    --warning-color: #ffcf9e;
+    --success-color: #a8e6c0;
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.03);
+    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.03), 0 1px 3px rgba(0, 0, 0, 0.05);
+    --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.03), 0 4px 6px rgba(0, 0, 0, 0.03);
+    --radius-sm: 0.25rem;
+    --radius-md: 0.5rem;
+    --radius-lg: 1rem;
+    --header-height: 70px;
+}
+
+/* Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Noto Sans KR', sans-serif;
+}
+
+body {
+    background-color: var(--background-color);
+    color: var(--text-color);
+    line-height: 1.6;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+ul {
+    list-style-type: none;
+}
+
+/* Header Styles */
+header {
+    background-color: var(--primary-color);
+    color: white;
+    box-shadow: var(--shadow-md);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    height: var(--header-height);
+}
+
+.header-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 100%;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.logo-icon {
+    font-size: 2rem;
+}
+
+.logo h1 {
+    font-size: 1.3rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.nav-menu ul {
+    display: flex;
+    gap: 30px;
+}
+
+.nav-menu li a {
+    padding: 8px 12px;
+    border-radius: var(--radius-md);
+    transition: background-color 0.3s, color 0.3s;
+    font-weight: 500;
+}
+
+.nav-menu li a:hover, .nav-menu li a.active {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Page Title Section */
+.page-title-container {
+    background-color: var(--primary-dark);
+    color: white;
+    padding: 40px 0;
+}
+
+.page-title-wrapper {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 30px;
+}
+
+.page-title {
+    font-size: 2rem;
+    margin-bottom: 8px;
+    font-weight: 700;
+}
+
+.page-description {
+    opacity: 0.9;
+    font-size: 1.1rem;
+    max-width: 600px;
+    font-weight: 300;
+}
+
+/* Main Content */
+main {
+    flex: 1;
+    padding: 40px 0;
+}
+
+.content-wrapper {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 30px;
+    display: flex;
+    gap: 30px;
+}
+
+/* Category Side Menu */
+.category-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 320px;
+    flex-shrink: 0;
+}
+
+.category {
+    background-color: var(--card-color);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+    border: 1px solid var(--border-color);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.category:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.category-header {
+    padding: 15px;
+    background-color: var(--primary-light);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.category-icon {
+    font-size: 1.5rem;
+}
+
+.category-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--primary-dark);
+}
+
+.disease-list {
+    padding: 10px 0;
+}
+
+.disease-item {
+    padding: 10px 15px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: block;
+    font-size: 0.95rem;
+    position: relative;
+}
+
+.disease-item::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 0;
+    background-color: var(--primary-light);
+    transition: width 0.2s ease;
+    z-index: 0;
+}
+
+.disease-item:hover::before {
+    width: 4px;
+}
+
+.disease-item:hover {
+    background-color: #f8fafc;
+    color: var(--primary-color);
+    font-weight: 500;
+}
+
+.disease-item.active {
+    background-color: var(--primary-light);
+    color: var(--primary-dark);
+    font-weight: 600;
+    position: relative;
+}
+
+.disease-item.active::before {
+    width: 4px;
+    background-color: var(--primary-color);
+}
+
+/* Disease Content */
+.disease-content-container {
+    flex: 1;
+    min-width: 0;
+}
+
+#diseaseContent {
+    background-color: var(--card-color);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+    padding: 30px;
+    margin-bottom: 20px;
+    border: 1px solid var(--border-color);
+}
+
+.disease-header {
+    margin-bottom: 30px;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 20px;
+}
+
+.disease-name {
+    font-size: 1.8rem;
+    color: var(--primary-dark);
+    margin-bottom: 10px;
+    font-weight: 700;
+}
+
+.section {
+    margin-bottom: 30px;
+}
+
+.section-title {
+    font-size: 1.2rem;
+    color: var(--primary-color);
+    margin-bottom: 15px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.section-title::before {
+    content: "";
+    width: 5px;
+    height: 20px;
+    background-color: var(--secondary-color);
+    border-radius: var(--radius-sm);
+    display: inline-block;
+}
+
+.section-content {
+    line-height: 1.8;
+    color: var(--text-color);
+    font-size: 1rem;
+    padding-left: 13px;
+}
+
+/* Loading and Error */
+.loading {
+    text-align: center;
+    padding: 40px;
+    color: var(--text-light);
+}
+
+.spinner {
+    border: 4px solid rgba(0, 0, 0, 0.05);
+    border-radius: 50%;
+    border-top: 4px solid var(--primary-color);
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 20px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.error {
+    background-color: #fff5f7;
+    color: var(--danger-color);
+    padding: 30px;
+    border-radius: var(--radius-md);
+    margin-top: 20px;
+    text-align: center;
+    display: none;
+    border: 1px solid #fee5eb;
+}
+
+.error-icon {
+    font-size: 2rem;
+    margin-bottom: 15px;
+}
+
+/* Footer */
+footer {
+    background-color: var(--primary-dark);
+    color: white;
+    padding: 40px 0;
+    margin-top: auto;
+}
+
+.footer-content {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+    text-align: center;
+}
+
+.footer-logo {
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.footer-info {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 0.9rem;
+    line-height: 1.6;
+}
+
+.footer-links {
+    display: flex;
+    gap: 30px;
+    margin-top: 20px;
+}
+
+.footer-links a {
+    color: rgba(255, 255, 255, 0.9);
+    transition: color 0.2s;
+}
+
+.footer-links a:hover {
+    color: white;
+    text-decoration: underline;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .content-wrapper {
+        flex-direction: column;
+    }
+    
+    .category-container {
+        width: 100%;
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+    
+    .category {
+        flex: 1;
+        min-width: calc(33.33% - 20px);
+    }
+}
+
+@media (max-width: 768px) {
+    .header-container {
+        flex-direction: column;
+        padding: 15px;
+        height: auto;
+    }
+    
+    .nav-menu {
+        margin-top: 15px;
+    }
+    
+    .nav-menu ul {
+        gap: 10px;
+    }
+    
+    .page-title-container {
+        padding: 30px 0;
+    }
+    
+    .category {
+        min-width: calc(50% - 10px);
+    }
+    
+    .content-wrapper {
+        padding: 0 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    .category {
+        min-width: 100%;
+    }
+    
+    .page-title {
+        font-size: 1.5rem;
+    }
+    
+    .page-description {
+        font-size: 1rem;
+    }
+    
+    .disease-name {
+        font-size: 1.5rem;
+    }
+    
+    .footer-links {
+        flex-direction: column;
+        gap: 15px;
+    }
+}
