@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>건강 게시판</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+        
+        body {
+            background-color: #f9e7f0;
+            color: #555;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background-color: #ff9eb6;
+            color: white;
+            padding: 20px 0;
+            border-radius: 15px 15px 0 0;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        header::before {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 30px;
+            background-color: white;
+            border-radius: 50% 50% 0 0;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 30px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .logo {
+            font-size: 32px;
+            font-weight: bold;
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo img {
+            height: 40px;
+            margin-right: 10px;
+        }
+        
+        .main-content {
+            background-color: white;
+            border-radius: 0 0 15px 15px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .board-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .board-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #ff6b95;
+            display: flex;
+            align-items: center;
+        }
+        
+        .board-title img {
+            height: 30px;
+            margin-right: 10px;
+        }
+        
+        .search-box {
+            display: flex;
+            align-items: center;
+            background-color: #f8f8f8;
+            border-radius: 20px;
+            padding: 5px 15px;
+            border: 2px solid #ffd3e0;
+            margin-bottom: 20px;
+        }
+        
+        .search-box select, .search-box input {
+            border: none;
+            background: transparent;
+            padding: 8px;
+            outline: none;
+        }
+        
+        .search-box button {
+            background-color: #ff9eb6;
+            border: none;
+            border-radius: 20px;
+            color: white;
+            padding: 5px 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .search-box button:hover {
+            background-color: #ff6b95;
+        }
+        
+        .board-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        
+        .board-table th {
+            background-color: #ffd3e0;
+            color: #ff6b95;
+            padding: 12px;
+            text-align: center;
+            border-top: 2px solid #ff9eb6;
+            border-bottom: 2px solid #ff9eb6;
+        }
+        
+        .board-table td {
+            padding: 12px;
+            text-align: center;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .board-table tr:hover {
+            background-color: #fff8fa;
+        }
+        
+        .board-table .title {
+            text-align: left;
+        }
+        
+        .board-table a {
+            color: #555;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        
+        .board-table a:hover {
+            color: #ff6b95;
+        }
+        
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        
+        .pagination a {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            line-height: 30px;
+            text-align: center;
+            margin: 0 5px;
+            border-radius: 50%;
+            color: #555;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        
+        .pagination a:hover, .pagination a.active {
+            background-color: #ff9eb6;
+            color: white;
+        }
+        
+        .btn-write {
+            text-align: right;
+            margin-bottom: 20px;
+        }
+        
+        .btn {
+            background-color: #ff9eb6;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            padding: 8px 20px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .btn:hover {
+            background-color: #ff6b95;
+        }
+        
+        footer {
+            background-color: #ff9eb6;
+            color: white;
+            text-align: center;
+            padding: 20px 0;
+            border-radius: 15px;
+            margin-top: 20px;
+            position: relative;
+        }
+        
+        footer::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 30px;
+            background-color: white;
+            border-radius: 0 0 50% 50%;
+        }
+        
+        .footer-content {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .cute-icon {
+            font-size: 24px;
+            margin-right: 5px;
+            vertical-align: middle;
+        }
+        
+        .notice {
+            background-color: #fff8fa;
+            border: 2px dashed #ffd3e0;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .notice-title {
+            font-weight: bold;
+            color: #ff6b95;
+            margin-bottom: 5px;
+        }
+        
+        .category-filter {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .category-filter a {
+            background-color: #ffd3e0;
+            color: #ff6b95;
+            border-radius: 20px;
+            padding: 8px 15px;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        
+        .category-filter a:hover, .category-filter a.active {
+            background-color: #ff9eb6;
+            color: white;
+        }
+        
+        .no-data {
+            text-align: center;
+            padding: 30px;
+            color: #999;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-content">
+                <a href="#" class="logo">
+                    <span class="cute-icon">🌿</span> 건강 게시판
+                </a>
+            </div>
+        </header>
+        
+        <div class="main-content">
+            <div class="notice">
+                <div class="notice-title"><span class="cute-icon">📢</span> 건강 정보</div>
+                <p>건강한 생활을 위한 정보를 나눠보세요! 서로 존중하고 좋은 정보를 공유해주세요.</p>
+            </div>
+            
+            <div class="board-header">
+                <div class="board-title">
+                    <span class="cute-icon">💪</span> 건강 게시판
+                </div>
+            </div>
+            
+            <!-- 카테고리 필터 -->
+            <div class="category-filter">
+                <a th:href="@{/board/list}">전체</a>
+                <a th:href="@{/board/list(categoryId=1)}">생활</a>
+                <a th:href="@{/board/list(categoryId=2)}">운동</a>
+                <a th:href="@{/board/list(categoryId=3)}">음식</a>
+            </div>
+
+            <!-- 검색 기능 -->
+            <div class="search-box">
+                <form th:action="@{/board/list}" method="get">
+                    <select name="searchType">
+                        <option value="all" th:selected="${searchType == 'all'}">제목+내용</option>
+                        <option value="title" th:selected="${searchType == 'title'}">제목</option>
+                        <option value="content" th:selected="${searchType == 'content'}">내용</option>
+                    </select>
+                    <input type="text" name="keyword" placeholder="검색어를 입력하세요" th:value="${keyword}">
+                    <button type="submit">검색</button>
+                </form>
+            </div>
+            
+            <!-- 게시글 목록 -->
+            <table class="board-table">
+                <thead>
+                    <tr>
+                        <th>번호</th>
+                        <th>카테고리</th>
+                        <th>제목</th>
+                        <th>작성자</th>
+                        <th>조회수</th>
+                        <th>좋아요</th>
+                        <th>작성일</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="board : ${boardList}">
+                        <td th:text="${board.boardId}">1</td>
+                        <td th:text="${board.categoryName}">운동</td>
+                        <td>
+                            <a th:href="@{/board/detail/{id}(id=${board.boardId})}" th:text="${board.title}">게시글 제목</a>
+                            <span th:if="${board.commentCount > 0}" th:text="'[' + ${board.commentCount} + ']'"></span>
+                        </td>
+                        <td th:text="${board.nickname}">작성자</td>
+                        <td th:text="${board.viewCount}">0</td>
+                        <td th:text="${board.likeCount}">0</td>
+                        <td th:text="${#strings.substring(board.createdAt, 0, 10)}">2025-04-21</td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(boardList)}">
+                        <td colspan="7" class="no-data">등록된 게시글이 없습니다.</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <!-- 글쓰기 버튼 (로그인한 사용자만) -->
+            <div class="btn-write" sec:authorize="isAuthenticated()">
+                <a th:href="@{/board/write}" class="btn"><span class="cute-icon">✏️</span> 글쓰기</a>
+            </div>
+            
+            <!-- 페이징 처리 (추후 구현) -->
+            <div class="pagination">
+                <!-- 페이징 내용 -->
+            </div>
+        </div>
+        
+        <footer>
+            <div class="footer-content">
+                <p>&copy; 2025 건강 게시판. All rights reserved.</p>
+            </div>
+        </footer>
+    </div>
+</body>
+</html>

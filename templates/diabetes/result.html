@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>당뇨병 위험도 예측 결과</title>
+    <link rel="stylesheet" href="/static/css/board-detail.css">
+    <style>
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .result-box {
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+        .result-low {
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+        }
+        .result-medium {
+            background-color: #fff3cd;
+            border: 1px solid #ffeeba;
+        }
+        .result-high {
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+        }
+        .result-very-high {
+            background-color: #dc3545;
+            color: white;
+            border: 1px solid #dc3545;
+        }
+        .result-title {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        .result-detail {
+            margin-bottom: 5px;
+        }
+        .input-data {
+            background-color: #f8f9fa;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 5px;
+        }
+        .btn-back {
+            background-color: #6c757d;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 20px;
+        }
+        .recommendation-section {
+            margin-top: 30px;
+            padding: 15px;
+            background-color: #e9ecef;
+            border-radius: 5px;
+        }
+        /* 운동 추천 관련 스타일 */
+        .exercise-recommendation-section {
+            margin-top: 30px;
+            padding: 15px;
+            background-color: #f0f8ff;
+            border-radius: 5px;
+        }
+        .exercise-card {
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: white;
+        }
+        .exercise-gif {
+            max-width: 100%;
+            max-height: 200px;
+            display: block;
+            margin: 10px auto;
+        }
+        .exercise-instructions ol {
+            padding-left: 20px;
+        }
+        .alert-message {
+            padding: 15px;
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            border-radius: 5px;
+            color: #721c24;
+            margin-bottom: 15px;
+        }
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #6c757d;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>당뇨병 위험도 예측 결과</h1>
+        
+        <div th:class="${'result-box ' + 
+            (result.riskLevel == '낮음' ? 'result-low' : 
+            (result.riskLevel == '보통' ? 'result-medium' : 
+            (result.riskLevel == '고위험' ? 'result-high' : 'result-very-high')))}">
+            
+            <div class="result-title">
+                위험도: <span th:text="${result.riskLevel}"></span>
+            </div>
+            
+            <div class="result-detail">
+                당뇨병 확률: <span th:text="${result.probability != null ? (result.probability * 100 + '%') : '계산 불가'}"></span>
+            </div>
+        </div>
+        
+        <div class="recommendation-section">
+            <h2>건강 관리 추천</h2>
+            
+            <div th:if="${result.riskLevel == '낮음'}">
+                <p>현재 당뇨병 위험도가 낮습니다. 건강한 생활 습관을 유지하세요.</p>
+                <p>앞으로도 규칙적인 운동과 균형 잡힌 식단을 유지하시기 바랍니다.</p>
+            </div>
+            
+            <div th:if="${result.riskLevel == '보통'}">
+                <p>당뇨병 위험도가 보통 수준입니다. 생활 습관 개선을 고려해보세요.</p>
+                <p>규칙적인 운동과 균형 잡힌 식단이 중요합니다.</p>
+            </div>
+            
+            <div th:if="${result.riskLevel == '고위험'}">
+                <p>당뇨병 위험도가 높습니다. 생활 습관 개선이 필요합니다.</p>
+                <p>규칙적인 운동, 식이 조절, 그리고 정기적인 건강 검진을 권장합니다.</p>
+            </div>
+            
+            <div th:if="${result.riskLevel == '매우 위험'}">
+                <p>당뇨병 위험도가 매우 높습니다. 즉시 의료 전문가와 상담하세요.</p>
+                <p>의료 전문가의 지도 하에 생활 습관 개선 및 필요시 약물 치료를 고려하세요.</p>
+            </div>
+        </div>
+        
+        <!-- 운동 추천 섹션 -->
+        <div class="exercise-recommendation-section">
+            <h2>추천 운동</h2>
+            
+            <!-- 매우 위험 수준일 경우 -->
+            <div th:if="${result.riskLevel == '매우 위험'}" class="alert-message">
+                <p><strong>주의:</strong> 당뇨병 위험도가 매우 높습니다. 운동 전 반드시 의료 전문가와 상담하세요.</p>
+            </div>
+            
+            <!-- 운동 목록 영역 -->
+            <div id="exercise-recommendations" th:unless="${result.riskLevel == '매우 위험'}">
+                <div class="loading">
+                    <p>운동 추천을 불러오는 중입니다...</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="input-data">
+            <h3>입력한 데이터</h3>
+            <p>임신 횟수: <span th:text="${result.pregnancies}"></span></p>
+            <p>포도당 농도: <span th:text="${result.glucose}"></span> mg/dL</p>
+            <p>혈압: <span th:text="${result.bloodPressure}"></span> mm Hg</p>
+            <p>피부 두께: <span th:text="${result.skinThickness}"></span> mm</p>
+            <p>인슐린: <span th:text="${result.insulin}"></span> mu U/ml</p>
+            <p>체질량지수 (BMI): <span th:text="${result.bmi}"></span></p>
+            <p>당뇨병 가족력 함수: <span th:text="${result.diabetesPedigreeFunction}"></span></p>
+            <p>나이: <span th:text="${result.age}"></span>세</p>
+        </div>
+        
+        <a href="/diabetes/predict" class="btn-back">다시 예측하기</a>
+    </div>
+    
+    <!-- JavaScript -->
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // 페이지가 로드될 때 위험 수준을 가져옴
+        const riskLevelElement = document.querySelector('.result-title span');
+        if (riskLevelElement) {
+            const riskLevel = riskLevelElement.textContent.trim();
+            fetchExerciseRecommendations(riskLevel);
+        }
+    });
+
+    function fetchExerciseRecommendations(riskLevel) {
+        fetch(`http://192.168.0.22:5000/exercise/recommend?risk_level=${encodeURIComponent(riskLevel)}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('운동 추천을 가져오는데 문제가 발생했습니다.');
+                }
+                return response.json();
+            })
+            .then(data => {
+                displayExerciseRecommendations(data);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                const exerciseContainer = document.getElementById('exercise-recommendations');
+                if (exerciseContainer) {
+                    exerciseContainer.innerHTML = `<p>운동 추천을 가져오는데 문제가 발생했습니다.</p>`;
+                }
+            });
+    }
+
+    function displayExerciseRecommendations(data) {
+        const exerciseContainer = document.getElementById('exercise-recommendations');
+        if (!exerciseContainer) return;
+
+        // 매우 위험인 경우 특별 메시지
+        if (data.risk_level === '매우 위험') {
+            exerciseContainer.innerHTML = `
+                <div class="alert-message">
+                    <p><strong>주의:</strong> 당뇨병 위험도가 매우 높습니다. 운동 전 반드시 의료 전문가와 상담하세요.</p>
+                </div>
+            `;
+            return;
+        }
+
+        let exerciseHtml = '';
+
+        data.exercises.forEach(exercise => {
+            // 보조 근육 HTML 생성
+            let secondaryMusclesHtml = '';
+            if (Array.isArray(exercise.secondaryMuscles) && exercise.secondaryMuscles.length > 0) {
+                secondaryMusclesHtml = `
+                    <p><strong>보조 근육:</strong></p>
+                    <ul>
+                        ${exercise.secondaryMuscles.map(muscle => `<li>${muscle}</li>`).join('')}
+                    </ul>
+                `;
+            }
+
+            // 운동 방법 리스트 생성
+            const instructionsList = Array.isArray(exercise.instructions)
+                ? exercise.instructions.map(inst => `<li>${inst}</li>`).join('')
+                : '<li>상세 지침이 없습니다.</li>';
+
+            // 운동 카드 HTML 생성
+            exerciseHtml += `
+                <div class="exercise-card">
+                    <h3>${exercise.name}</h3>
+                    ${exercise.gifUrl ? `<img src="${exercise.gifUrl}" alt="${exercise.name}" class="exercise-gif">` : ''}
+                    <div class="exercise-details">
+                        ${exercise.target ? `<p><strong>대상 근육:</strong> ${exercise.target}</p>` : ''}
+                        ${exercise.bodyPart ? `<p><strong>운동 부위:</strong> ${exercise.bodyPart}</p>` : ''}
+                        ${exercise.equipment ? `<p><strong>도구:</strong> ${exercise.equipment}</p>` : ''}
+                        ${secondaryMusclesHtml}
+                    </div>
+                    <div class="exercise-instructions">
+                        <h4>운동 방법:</h4>
+                        <ol>${instructionsList}</ol>
+                    </div>
+                </div>
+            `;
+        });
+
+        exerciseContainer.innerHTML = exerciseHtml || '<p>추천 운동이 없습니다.</p>';
+    }
+</script>
+</body>
+</html>

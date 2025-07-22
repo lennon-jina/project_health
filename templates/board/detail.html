@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+    <title>게시글 상세</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+        
+        body {
+            background-color: #f9e7f0;
+            color: #555;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background-color: #ff9eb6;
+            color: white;
+            padding: 20px 0;
+            border-radius: 15px 15px 0 0;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        header::before {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 30px;
+            background-color: white;
+            border-radius: 50% 50% 0 0;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 30px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .logo {
+            font-size: 32px;
+            font-weight: bold;
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+        }
+        
+        .cute-icon {
+            font-size: 24px;
+            margin-right: 5px;
+            vertical-align: middle;
+        }
+        
+        .main-content {
+            background-color: white;
+            border-radius: 0 0 15px 15px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .board-detail {
+            margin-bottom: 30px;
+        }
+        
+        .board-header {
+            border-bottom: 2px solid #ffd3e0;
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .board-header h2 {
+            font-size: 24px;
+            font-weight: bold;
+            color: #ff6b95;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .board-info {
+            display: flex;
+            flex-wrap: wrap;
+            color: #888;
+            font-size: 14px;
+            gap: 15px;
+        }
+        
+        .board-content {
+            padding: 20px 10px;
+            min-height: 300px;
+            line-height: 1.8;
+        }
+        
+        .board-images {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .image-item img {
+            max-width: 100%;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .board-actions {
+            padding: 20px 0;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 8px 15px;
+            border-radius: 20px;
+            text-decoration: none;
+            margin-right: 10px;
+            transition: all 0.3s;
+            cursor: pointer;
+            border: none;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        a.btn {
+            background-color: #e0f0ff;
+            color: #4a90e2;
+        }
+        
+        a.btn:hover {
+            background-color: #4a90e2;
+            color: white;
+        }
+        
+        a.btn-danger {
+            background-color: #f8f8f8;
+            color: #888;
+        }
+        
+        a.btn-danger:hover {
+            background-color: #ff6b6b;
+            color: white;
+        }
+        
+        .btn-like, .btn-bookmark {
+            background-color: #fff8fa;
+            border: 2px solid #ffd3e0;
+            color: #ff6b95;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            margin-right: 10px;
+            transition: all 0.3s;
+        }
+        
+        .btn-like:before {
+            content: "♡";
+            margin-right: 5px;
+            font-size: 18px;
+        }
+        
+        .btn-bookmark:before {
+            content: "☆";
+            margin-right: 5px;
+            font-size: 18px;
+        }
+        
+        .btn-like:hover, .btn-bookmark:hover {
+            background-color: #ffd3e0;
+        }
+        
+        .btn-like.active, .btn-bookmark.active {
+            background-color: #ff9eb6;
+            color: white;
+            border-color: #ff9eb6;
+        }
+        
+        .btn-like.active:before {
+            content: "♥";
+        }
+        
+        .btn-bookmark.active:before {
+            content: "★";
+        }
+        
+        .comment-section {
+            background-color: #fff8fa;
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 30px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .comment-section h3 {
+            font-size: 18px;
+            font-weight: bold;
+            color: #ff6b95;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .comment-section h3:before {
+            content: "💬";
+            margin-right: 8px;
+            font-size: 20px;
+        }
+        
+        .comment-list {
+            margin-bottom: 20px;
+        }
+        
+        .comment-item {
+            border-bottom: 1px solid #ffd3e0;
+            padding: 15px 0;
+        }
+        
+        .comment-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+        
+        .comment-author {
+            font-weight: 500;
+            color: #ff6b95;
+        }
+        
+        .comment-date {
+            color: #888;
+            font-size: 12px;
+        }
+        
+        .comment-content {
+            line-height: 1.6;
+            padding: 5px 0;
+        }
+        
+        .comment-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 5px;
+        }
+        
+        .comment-actions button {
+            background: none;
+            border: none;
+            color: #ff9eb6;
+            cursor: pointer;
+            font-size: 12px;
+            padding: 3px 5px;
+        }
+        
+        .comment-actions button:hover {
+            text-decoration: underline;
+        }
+        
+        .loading-comments {
+            text-align: center;
+            padding: 15px;
+            color: #888;
+        }
+        
+        .comment-form textarea {
+            width: 100%;
+            height: 100px;
+            border: 2px solid #ffd3e0;
+            border-radius: 10px;
+            padding: 10px;
+            margin-bottom: 10px;
+            resize: vertical;
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+        
+        .comment-form button {
+            background-color: #ff9eb6;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            padding: 8px 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .comment-form button:hover {
+            background-color: #ff6b95;
+        }
+        
+        .comment-login-message {
+            text-align: center;
+            padding: 15px;
+            border: 2px dashed #ffd3e0;
+            border-radius: 10px;
+            background-color: #fff8fa;
+            margin-top: 20px;
+        }
+        
+        .comment-login-message a {
+            color: #ff6b95;
+            font-weight: 500;
+            text-decoration: none;
+        }
+        
+        .comment-login-message a:hover {
+            text-decoration: underline;
+        }
+        
+        footer {
+            background-color: #ff9eb6;
+            color: white;
+            text-align: center;
+            padding: 20px 0;
+            border-radius: 15px;
+            margin-top: 20px;
+            position: relative;
+        }
+        
+        footer::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 30px;
+            background-color: white;
+            border-radius: 0 0 50% 50%;
+        }
+        
+        .footer-content {
+            position: relative;
+            z-index: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-content">
+                <a th:href="@{/board/list}" class="logo">
+                    <span class="cute-icon">🌿</span> 건강 게시판
+                </a>
+            </div>
+        </header>
+        
+        <div class="main-content">
+            <div class="board-detail">
+                <div class="board-header">
+                    <h2>
+                        <span class="cute-icon">📝</span>
+                        <span th:text="${board.title}">게시글 제목</span>
+                    </h2>
+                    <div class="board-info">
+                        <span th:text="'작성자: ' + ${board.nickname}">작성자: 홍길동</span>
+                        <span th:text="'카테고리: ' + ${board.categoryName}">카테고리: 운동</span>
+                        <span th:text="'조회수: ' + ${board.viewCount}">조회수: 10</span>
+                        <span th:text="'좋아요: ' + ${board.likeCount}">좋아요: 5</span>
+                        <span th:text="'작성일: ' + ${board.createdAt}">작성일: 2023-04-21 12:34:56</span>
+                    </div>
+                </div>
+                
+                <div class="board-content" th:utext="${board.content}">
+                    게시글 내용이 표시됩니다.
+                </div>
+                
+                <!-- 이미지 표시 (있을 경우) -->
+                <div class="board-images" th:if="${not #lists.isEmpty(board.images)}">
+                    <div th:each="image : ${board.images}" class="image-item">
+                        <img th:src="@{'/uploads/' + ${image.savedPath}}" alt="첨부 이미지">
+                    </div>
+                </div>
+                
+                <!-- 좋아요 표시 영역 -->
+                <div class="likes">
+                    <div class="like-count-display" th:if="${board.likeCount > 0}">
+                        <span class="icon">❤️</span>
+                        <span th:text="${board.likeCount}">15</span>명이 이 글을 좋아합니다
+                    </div>
+                </div>
+                
+                <!-- 버튼 영역 (작성자만 수정/삭제 버튼 표시) -->
+                <div class="board-actions">
+                    <div>
+                        <a th:href="@{/board/list}" class="btn">목록으로</a>
+                    
+                        <!-- 현재 로그인한 사용자가 작성자인 경우에만 수정/삭제 버튼 표시 -->
+                        <th:block sec:authorize="isAuthenticated()" 
+                                th:if="${#authentication.principal.username == board.username}">
+                            <a th:href="@{/board/edit/{id}(id=${board.boardId})}" class="btn">수정</a>
+                            <a th:href="@{/board/delete/{id}(id=${board.boardId})}" class="btn btn-danger"
+                            onclick="return confirm('정말로 삭제하시겠습니까?')">삭제</a>
+                        </th:block>
+                    </div>
+                    
+                    <!-- 좋아요/북마크 버튼 (로그인한 사용자만 표시) -->
+                    <div sec:authorize="isAuthenticated()">
+                        <!-- 좋아요 버튼 -->
+                        <button th:class="${board.liked ? 'btn-like active' : 'btn-like'}"
+                                th:data-id="${board.boardId}">
+                            좋아요
+                        </button>
+                        
+                        <!-- 북마크 버튼 -->
+                        <button th:class="${board.bookmarked ? 'btn-bookmark active' : 'btn-bookmark'}"
+                                th:data-id="${board.boardId}">
+                            북마크
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 댓글 영역 -->
+            <div class="comment-section">
+                <h3>댓글</h3>
+                <!-- 댓글 목록 -->
+                <div class="comment-list" id="commentList">
+                    <!-- 댓글 내용은 JavaScript로 로드됨 -->
+                    <div class="loading-comments">댓글을 불러오는 중...</div>
+                </div>
+
+                <!-- 댓글 작성 폼 (로그인한 사용자만 표시) -->
+                <div class="comment-form" sec:authorize="isAuthenticated()">
+                    <form id="commentForm">
+                        <input type="hidden" id="boardId" th:value="${board.boardId}">
+                        <textarea id="commentContent" rows="3" placeholder="댓글을 입력하세요..." required></textarea>
+                        <button type="submit" class="btn">댓글 작성</button>
+                    </form>
+                </div>
+                
+                <!-- 로그인하지 않은 사용자에게 표시되는 메시지 -->
+                <div class="comment-login-message" sec:authorize="!isAuthenticated()">
+                    <p>댓글을 작성하려면 <a th:href="@{/login}">로그인</a>이 필요합니다.</p>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <div class="footer-content">
+                <p>&copy; 2025 건강 게시판. All rights reserved.</p>
+            </div>
+        </footer>
+    </div>
+
+    <script th:src="@{/js/comment.js}"></script>
+    <script th:src="@{/js/board-interaction.js}"></script>
+</body>
+</html>

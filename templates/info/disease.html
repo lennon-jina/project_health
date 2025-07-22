@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>질병관리청 건강정보 포털</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/disease.css">
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <div class="logo">
+                <div class="logo-icon">🏥</div>
+                <h1>질병관리청 건강정보 포털</h1>
+            </div>
+            <nav class="nav-menu">
+                <ul>
+                    <li><a href="#" class="active">질병정보</a></li>
+                    <li><a href="#">예방접종</a></li>
+                    <li><a href="#">건강검진</a></li>
+                    <li><a href="#">건강소식</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    
+    <div class="page-title-container">
+        <div class="page-title-wrapper">
+            <h2 class="page-title">질병정보 검색</h2>
+            <p class="page-description">다양한 질병에 대한 정보를 카테고리별로 확인하실 수 있습니다.</p>
+        </div>
+    </div>
+    
+    <main>
+        <div class="content-wrapper">
+            <aside class="category-container">
+                <div class="category">
+                    <div class="category-header">
+                        <div class="category-icon">🦠</div>
+                        <h2 class="category-title">감염성 질환</h2>
+                    </div>
+                    <ul class="disease-list">
+                        <li class="disease-item" data-code="5423">감기</li>
+                        <li class="disease-item" data-code="5232">독감(인플루엔자)</li>
+                        <li class="disease-item" data-code="5249">폐렴</li>
+                        <li class="disease-item" data-code="6561">결핵</li>
+                    </ul>
+                </div>
+                
+                <div class="category">
+                    <div class="category-header">
+                        <div class="category-icon">❤️</div>
+                        <h2 class="category-title">만성 질환</h2>
+                    </div>
+                    <ul class="disease-list">
+                        <li class="disease-item" data-code="5300">고혈압</li>
+                        <li class="disease-item" data-code="5305">당뇨병</li>
+                    </ul>
+                </div>
+                
+                <div class="category">
+                    <div class="category-header">
+                        <div class="category-icon">👶</div>
+                        <h2 class="category-title">소아 질환</h2>
+                    </div>
+                    <ul class="disease-list">
+                        <li class="disease-item" data-code="5332">수족구병</li>
+                        <li class="disease-item" data-code="5283">홍역 볼거리 풍진</li>
+                        <li class="disease-item" data-code="5474">폐렴</li>
+                    </ul>
+                </div>
+                
+                <div class="category">
+                    <div class="category-header">
+                        <div class="category-icon">🧴</div>
+                        <h2 class="category-title">피부질환</h2>
+                    </div>
+                    <ul class="disease-list">
+                        <li class="disease-item" data-code="6582">아토피</li>
+                        <li class="disease-item" data-code="3947">여드름</li>
+                        <li class="disease-item" data-code="5693">무좀</li>
+                    </ul>
+                </div>
+                
+                <div class="category">
+                    <div class="category-header">
+                        <div class="category-icon">👩</div>
+                        <h2 class="category-title">여성 건강</h2>
+                    </div>
+                    <ul class="disease-list">
+                        <li class="disease-item" data-code="5698">생리통</li>
+                        <li class="disease-item" data-code="5960">질염</li>
+                        <li class="disease-item" data-code="6190">자궁근종</li>
+                    </ul>
+                </div>
+                
+                <div class="category">
+                    <div class="category-header">
+                        <div class="category-icon">🧠</div>
+                        <h2 class="category-title">정신 건강</h2>
+                    </div>
+                    <ul class="disease-list">
+                        <li class="disease-item" data-code="5294">우울감</li>
+                    </ul>
+                </div>
+            
+                <div class="category">
+                    <div class="category-header">
+                        <div class="category-icon">👵</div>
+                        <h2 class="category-title">노인성 질환</h2>
+                    </div>
+                    <ul class="disease-list">
+                        <li class="disease-item" data-code="5833">골다공증</li>
+                        <li class="disease-item" data-code="1988">관절염</li>
+                    </ul>
+                </div>
+                
+                <div class="category">
+                    <div class="category-header">
+                        <div class="category-icon">🚑</div>
+                        <h2 class="category-title">응급상황</h2>
+                    </div>
+                    <ul class="disease-list">
+                        <li class="disease-item" data-code="5243">심근경색</li>
+                        <li class="disease-item" data-code="6551">탈수</li>
+                        <li class="disease-item" data-code="5495">뇌졸중</li>
+                    </ul>
+                </div>
+            </aside>
+            
+            <div class="disease-content-container">
+                <div id="diseaseContent">
+                    <div class="loading">
+                        <div class="spinner"></div>
+                        <p>질병정보를 불러오는 중입니다...</p>
+                    </div>
+                </div>
+                
+                <div class="error">
+                    <div class="error-icon">⚠️</div>
+                    <p>정보를 불러오는데 문제가 발생했습니다. 잠시 후 다시 시도해주세요.</p>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <footer>
+        <div class="footer-content">
+            <div class="footer-logo">
+                <span>질병관리청 건강정보 포털</span>
+            </div>
+            <div class="footer-info">
+                <p>© 2025 질병관리청 건강정보 포털 | 데이터 제공: 질병관리청</p>
+                <p>주소: 충청북도 청주시 흥덕구 오송읍 오송생명2로 187 질병관리청</p>
+                <p>전화: 1339 (질병관리청 콜센터) | 이메일: kdca@korea.kr</p>
+            </div>
+            <div class="footer-links">
+                <a href="#">개인정보처리방침</a>
+                <a href="#">이용약관</a>
+                <a href="#">사이트맵</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/disease.js"></script>
+</body>
+</html>

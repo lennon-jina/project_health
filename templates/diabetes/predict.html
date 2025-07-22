@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>당뇨병 위험도 예측</title>
+<style>
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+.form-group {
+    margin-bottom: 15px;
+}
+label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+input[type="number"], input[type="text"], select.form-control {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+.btn-submit {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+.error-message {
+    color: red;
+    margin-top: 10px;
+}
+.info-box {
+    background-color: #f8f9fa;
+    border-left: 5px solid #17a2b8;
+    padding: 10px 15px;
+    margin-bottom: 20px;
+}
+
+/* 새로 추가된 스타일 */
+.mode-selector {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+.mode-btn {
+    padding: 10px 20px;
+    margin: 0 10px;
+    border: 2px solid #4CAF50;
+    background-color: #fff;
+    color: #4CAF50;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s;
+}
+.mode-btn.active {
+    background-color: #4CAF50;
+    color: white;
+}
+.form-description {
+    margin-bottom: 10px;
+    color: #666;
+}
+.question-help {
+    font-size: 0.9em;
+    color: #666;
+    margin-top: 3px;
+}
+.yes-no-options {
+    display: flex;
+    gap: 15px;
+    margin-top: 5px;
+}
+.checkbox-option {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+.light-bulb {
+    font-size: 24px;
+    margin-right: 10px;
+    color: #FFD700;
+}
+.form-title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+.bmi-description {
+    margin-top: 5px;
+    font-size: 0.9em;
+    color: #666;
+}
+</style>
+</head>
+<body>
+<div class="container">
+    <div class="form-title">
+        <span class="light-bulb">💡</span>
+        <h1>당뇨병 예측 입력항목</h1>
+    </div>
+
+    <div class="mode-selector">
+        <button type="button" class="mode-btn active" id="expert-mode">전문가용</button>
+        <button type="button" class="mode-btn" id="normal-mode">일반인용</button>
+    </div>
+
+    <div class="info-box">
+        <p>아래 정보를 입력하시면 당뇨병 위험도를 예측해 드립니다.</p>
+        <p>모든 항목을 정확하게 입력해 주세요.</p>
+    </div>
+
+    <div th:if="${errorMessage}" class="error-message">
+        <p th:text="${errorMessage}"></p>
+    </div>
+
+    <form th:action="@{/diabetes/predict}" method="post" id="diabetes-form">
+        <!-- 모드 정보를 저장할 hidden 필드 -->
+        <input type="hidden" id="mode" name="mode" value="expert">
+        
+        <!-- 일반인용 히든 필드 -->
+        <input type="hidden" id="glucoseOption" name="glucoseOption" value="unknown">
+        <input type="hidden" id="bpOption" name="bpOption" value="normal">
+        <input type="hidden" id="skinType" name="skinType" value="normal">
+        <input type="hidden" id="insulinOption" name="insulinOption" value="normal">
+        <input type="hidden" id="dpfOption" name="dpfOption" value="none">
+        <input type="hidden" id="height-field" name="height" value="">
+        <input type="hidden" id="weight-field" name="weight" value="">
+
+        <!-- 전문가용 폼 -->
+        <div id="expert-form">
+            <div class="form-group">
+                <label for="pregnancies-expert">임신 횟수</label>
+                <div class="form-description">여성만 입력</div>
+                <input type="number" id="pregnancies-expert" name="pregnancies" min="0">
+            </div>
+
+            <div class="form-group">
+                <label for="glucose-expert">포도당 농도 (mg/dL)</label>
+                <input type="number" id="glucose-expert" name="glucose" min="0">
+            </div>
+
+            <div class="form-group">
+                <label for="bloodPressure-expert">혈압 (mm Hg)</label>
+                <input type="number" id="bloodPressure-expert" name="bloodPressure" min="0">
+            </div>
+
+            <div class="form-group">
+                <label for="skinThickness-expert">피부 두께 (mm)</label>
+                <input type="number" id="skinThickness-expert" name="skinThickness" min="0">
+            </div>
+
+            <div class="form-group">
+                <label for="insulin-expert">인슐린 (mu U/ml)</label>
+                <input type="number" id="insulin-expert" name="insulin" min="0">
+            </div>
+
+            <div class="form-group">
+                <label for="bmi-expert">체질량지수 (BMI)</label>
+                <input type="text" id="bmi-expert" name="bmi" pattern="[0-9]+(\.[0-9]+)?">
+            </div>
+
+            <div class="form-group">
+                <label for="diabetesPedigreeFunction-expert">당뇨병 가족력 함수</label>
+                <input type="text" id="diabetesPedigreeFunction-expert" name="diabetesPedigreeFunction" pattern="[0-9]+(\.[0-9]+)?">
+            </div>
+
+            <div class="form-group">
+                <label for="age-expert">나이</label>
+                <input type="number" id="age-expert" name="age" min="0">
+            </div>
+        </div>
+
+        <!-- 일반인용 폼 -->
+        <div id="normal-form" style="display: none;">
+            <div class="form-group">
+                <label>혈당</label>
+                <div class="question-help">최근 건강검진에서 높은 혈당 수치가 나온 적이 있나요?</div>
+                <div class="yes-no-options">
+                    <div class="checkbox-option">
+                        <input type="radio" name="glucose-option" id="glucose-yes" value="high"> <label for="glucose-yes">예</label>
+                    </div>
+                    <div class="checkbox-option">
+                        <input type="radio" name="glucose-option" id="glucose-no" value="normal"> <label for="glucose-no">아니오</label>
+                    </div>
+                    <div class="checkbox-option">
+                        <input type="radio" name="glucose-option" id="glucose-unknown" value="unknown" checked> <label for="glucose-unknown">모르겠음</label>
+                    </div>
+                </div>
+                <input type="hidden" id="glucose-value" name="glucose" value="100">
+            </div>
+
+            <div class="form-group">
+                <label>혈압</label>
+                <div class="question-help">고혈압 진단을 받은 적이 있나요?</div>
+                <div class="yes-no-options">
+                    <div class="checkbox-option">
+                        <input type="radio" name="bp-option" id="bp-yes" value="high"> <label for="bp-yes">예</label>
+                    </div>
+                    <div class="checkbox-option">
+                        <input type="radio" name="bp-option" id="bp-no" value="normal" checked> <label for="bp-no">아니오</label>
+                    </div>
+                </div>
+                <input type="hidden" id="bloodPressure-value" name="bloodPressure" value="80">
+            </div>
+
+            <div class="form-group">
+                <label>신체</label>
+                <div class="question-help">체형이 어떻게 되시나요?</div>
+                <select id="skin-select" class="form-control">
+                    <option value="thin">마른 편</option>
+                    <option value="normal" selected>보통</option>
+                    <option value="overweight">다소 살이 많은 편</option>
+                    <option value="obese">비만</option>
+                </select>
+                <input type="hidden" id="skinThickness-value" name="skinThickness" value="20">
+            </div>
+
+            <div class="form-group">
+                <label>인슐린</label>
+                <div class="question-help">식후 혈당이 높다는 말을 들으신 적이 있나요?</div>
+                <div class="yes-no-options">
+                    <div class="checkbox-option">
+                        <input type="radio" name="insulin-option" id="insulin-yes" value="high"> <label for="insulin-yes">예</label>
+                    </div>
+                    <div class="checkbox-option">
+                        <input type="radio" name="insulin-option" id="insulin-no" value="normal" checked> <label for="insulin-no">아니오</label>
+                    </div>
+                    <div class="checkbox-option">
+                        <input type="radio" name="insulin-option" id="insulin-unknown" value="unknown"> <label for="insulin-unknown">모르겠음</label>
+                    </div>
+                </div>
+                <input type="hidden" id="insulin-value" name="insulin" value="30">
+            </div>
+
+            <div class="form-group">
+                <label>체질량지수 (BMI) 계산</label>
+                <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+                    <div style="flex: 1;">
+                        <label for="height-input">키 (cm)</label>
+                        <input type="number" id="height-input" min="100" max="250" placeholder="키 입력">
+                    </div>
+                    <div style="flex: 1;">
+                        <label for="weight-input">몸무게 (kg)</label>
+                        <input type="number" id="weight-input" min="30" max="200" placeholder="몸무게 입력">
+                    </div>
+                </div>
+                <div>
+                    <label for="bmi-result">계산된 BMI</label>
+                    <input type="text" id="bmi-result" name="bmi">
+                    <div class="bmi-description">
+                        <span>저체중: 18.5 미만 | 정상: 18.5-24.9 | 과체중: 25-29.9 | 비만: 30 이상</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>가족력</label>
+                <div class="question-help">가족 중 당뇨병 환자가 있나요?</div>
+                <div class="yes-no-options">
+                    <div class="checkbox-option">
+                        <input type="radio" name="dpf-option" id="dpf-parent" value="parent"> <label for="dpf-parent">부모님 중 있음</label>
+                    </div>
+                    <div class="checkbox-option">
+                        <input type="radio" name="dpf-option" id="dpf-relative" value="relative"> <label for="dpf-relative">친척 중 있음</label>
+                    </div>
+                    <div class="checkbox-option">
+                        <input type="radio" name="dpf-option" id="dpf-no" value="none" checked> <label for="dpf-no">없음</label>
+                    </div>
+                </div>
+                <input type="hidden" id="diabetesPedigreeFunction-value" name="diabetesPedigreeFunction" value="0.1">
+            </div>
+
+            <div class="form-group">
+                <label for="age-normal">나이 (세)</label>
+                <input type="number" id="age-normal" name="age" min="0" max="120" placeholder="나이 입력">
+            </div>
+            
+            <!-- 일반인용 폼에서 사용하지 않는 필드를 위한 더미 값 -->
+            <input type="hidden" id="pregnancies-normal" name="pregnancies" value="0">
+        </div>
+
+        <button type="submit" class="btn-submit">예측하기</button>
+    </form>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // 모드 전환 버튼 기능
+    const expertMode = document.getElementById('expert-mode');
+    const normalMode = document.getElementById('normal-mode');
+    const expertForm = document.getElementById('expert-form');
+    const normalForm = document.getElementById('normal-form');
+    const modeField = document.getElementById('mode');
+    
+    expertMode.addEventListener('click', function() {
+        expertMode.classList.add('active');
+        normalMode.classList.remove('active');
+        expertForm.style.display = 'block';
+        normalForm.style.display = 'none';
+        
+        // 모드 설정
+        modeField.value = 'expert';
+        
+        // 폼 필드 활성화/비활성화 처리
+        toggleModeFields();
+    });
+    
+    normalMode.addEventListener('click', function() {
+        normalMode.classList.add('active');
+        expertMode.classList.remove('active');
+        normalForm.style.display = 'block';
+        expertForm.style.display = 'none';
+        
+        // 모드 설정
+        modeField.value = 'normal';
+        
+        // 폼 필드 활성화/비활성화 처리
+        toggleModeFields();
+    });
+    
+    // 활성화된 모드에 따라 필드를 활성화/비활성화
+    function toggleModeFields() {
+        const isExpertMode = modeField.value === 'expert';
+        
+        // 전문가용 모드일 때
+        document.getElementById('pregnancies-expert').disabled = !isExpertMode;
+        document.getElementById('glucose-expert').disabled = !isExpertMode;
+        document.getElementById('bloodPressure-expert').disabled = !isExpertMode;
+        document.getElementById('skinThickness-expert').disabled = !isExpertMode;
+        document.getElementById('insulin-expert').disabled = !isExpertMode;
+        document.getElementById('bmi-expert').disabled = !isExpertMode;
+        document.getElementById('diabetesPedigreeFunction-expert').disabled = !isExpertMode;
+        document.getElementById('age-expert').disabled = !isExpertMode;
+        
+        // 일반인용 모드일 때
+        document.getElementById('glucose-yes').disabled = isExpertMode;
+        document.getElementById('glucose-no').disabled = isExpertMode;
+        document.getElementById('glucose-unknown').disabled = isExpertMode;
+        document.getElementById('bp-yes').disabled = isExpertMode;
+        document.getElementById('bp-no').disabled = isExpertMode;
+        document.getElementById('skin-select').disabled = isExpertMode;
+        document.getElementById('insulin-yes').disabled = isExpertMode;
+        document.getElementById('insulin-no').disabled = isExpertMode;
+        document.getElementById('insulin-unknown').disabled = isExpertMode;
+        document.getElementById('height-input').disabled = isExpertMode;
+        document.getElementById('weight-input').disabled = isExpertMode;
+        document.getElementById('bmi-result').disabled = isExpertMode;
+        document.getElementById('dpf-parent').disabled = isExpertMode;
+        document.getElementById('dpf-relative').disabled = isExpertMode;
+        document.getElementById('dpf-no').disabled = isExpertMode;
+        document.getElementById('age-normal').disabled = isExpertMode;
+    }
+    
+    // 일반인용 폼의 인터랙션 처리
+    // 포도당 관련
+    const glucoseOptions = document.querySelectorAll('input[name="glucose-option"]');
+    const glucoseOptionHidden = document.getElementById('glucoseOption');
+    const glucoseValue = document.getElementById('glucose-value');
+    
+    glucoseOptions.forEach(option => {
+        option.addEventListener('change', function() {
+            // hidden 필드 업데이트
+            glucoseOptionHidden.value = this.value;
+            
+            if (this.value === 'high') {
+                glucoseValue.value = '140';
+            } else if (this.value === 'normal') {
+                glucoseValue.value = '85';
+            } else {
+                glucoseValue.value = '100';
+            }
+        });
+    });
+    
+    // 혈압 관련
+    const bpOptions = document.querySelectorAll('input[name="bp-option"]');
+    const bpOptionHidden = document.getElementById('bpOption');
+    const bpValue = document.getElementById('bloodPressure-value');
+    
+    bpOptions.forEach(option => {
+        option.addEventListener('change', function() {
+            // hidden 필드 업데이트
+            bpOptionHidden.value = this.value;
+            
+            if (this.value === 'high') {
+                bpValue.value = '140';
+            } else {
+                bpValue.value = '80';
+            }
+        });
+    });
+    
+    // 피부 두께(체형) 선택
+    const skinSelect = document.getElementById('skin-select');
+    const skinTypeHidden = document.getElementById('skinType');
+    const skinValue = document.getElementById('skinThickness-value');
+    
+    skinSelect.addEventListener('change', function() {
+        // hidden 필드 업데이트
+        skinTypeHidden.value = this.value;
+        
+        // 체형에 따른 피부 두께 값 설정
+        if (this.value === 'thin') {
+            skinValue.value = '10';
+        } else if (this.value === 'normal') {
+            skinValue.value = '20';
+        } else if (this.value === 'overweight') {
+            skinValue.value = '30';
+        } else if (this.value === 'obese') {
+            skinValue.value = '40';
+        }
+    });
+    
+    // 인슐린 관련
+    const insulinOptions = document.querySelectorAll('input[name="insulin-option"]');
+    const insulinOptionHidden = document.getElementById('insulinOption');
+    const insulinValue = document.getElementById('insulin-value');
+    
+    insulinOptions.forEach(option => {
+        option.addEventListener('change', function() {
+            // hidden 필드 업데이트
+            insulinOptionHidden.value = this.value;
+            
+            if (this.value === 'high') {
+                insulinValue.value = '100';
+            } else if (this.value === 'normal') {
+                insulinValue.value = '30';
+            } else {
+                insulinValue.value = '50';
+            }
+        });
+    });
+    
+    // BMI 계산기
+    const heightInput = document.getElementById('height-input');
+    const weightInput = document.getElementById('weight-input');
+    const bmiResult = document.getElementById('bmi-result');
+    const heightHidden = document.getElementById('height-field');
+    const weightHidden = document.getElementById('weight-field');
+    
+    function calculateBMI() {
+        const height = parseFloat(heightInput.value);
+        const weight = parseFloat(weightInput.value);
+        
+        if (height && weight) {
+            // hidden 필드 업데이트
+            heightHidden.value = height;
+            weightHidden.value = weight;
+            
+            const heightInMeters = height / 100;
+            const bmi = weight / (heightInMeters * heightInMeters);
+            bmiResult.value = bmi.toFixed(2);
+            
+            // BMI 설명 추가
+            let bmiCategory = "";
+            if (bmi < 18.5) {
+                bmiCategory = "저체중";
+            } else if (bmi < 25) {
+                bmiCategory = "정상";
+            } else if (bmi < 30) {
+                bmiCategory = "과체중";
+            } else {
+                bmiCategory = "비만";
+            }
+            
+            // BMI 설명 업데이트
+            const bmiDesc = document.querySelector('.bmi-description span');
+            if (bmiDesc) {
+                bmiDesc.textContent = `저체중: 18.5 미만 | 정상: 18.5-24.9 | 과체중: 25-29.9 | 비만: 30 이상 (현재: ${bmiCategory})`;
+            }
+        }
+    }
+    
+    heightInput.addEventListener('input', calculateBMI);
+    weightInput.addEventListener('input', calculateBMI);
+    
+    // 가족력 라디오 버튼
+    const dpfOptions = document.querySelectorAll('input[name="dpf-option"]');
+    const dpfOptionHidden = document.getElementById('dpfOption');
+    const dpfValue = document.getElementById('diabetesPedigreeFunction-value');
+    
+    dpfOptions.forEach(option => {
+        option.addEventListener('change', function() {
+            // hidden 필드 업데이트
+            dpfOptionHidden.value = this.value;
+            
+            if (this.value === 'parent') {
+                dpfValue.value = '0.5';
+            } else if (this.value === 'relative') {
+                dpfValue.value = '0.3';
+            } else {
+                dpfValue.value = '0.1';
+            }
+        });
+    });
+
+    // 폼 제출 처리
+    document.getElementById('diabetes-form').addEventListener('submit', function(e) {
+        // 현재 모드 확인
+        const currentMode = document.getElementById('mode').value;
+        
+        if (currentMode === 'normal') {
+            // 나이 값이 입력되었는지 확인
+            const ageValue = document.getElementById('age-normal').value;
+            if (!ageValue || ageValue <= 0) {
+                alert('나이를 올바르게 입력해주세요.');
+                e.preventDefault();
+                return;
+            }
+            
+            // BMI가 입력되지 않은 경우 기본값 설정
+            if (!document.getElementById('bmi-result').value) {
+                document.getElementById('bmi-result').value = '25.0';
+            }
+            
+            console.log('일반인용 폼 제출:', {
+                mode: currentMode,
+                age: document.getElementById('age-normal').value,
+                bmi: document.getElementById('bmi-result').value,
+                glucose: document.getElementById('glucose-value').value,
+                bloodPressure: document.getElementById('bloodPressure-value').value,
+                skinThickness: document.getElementById('skinThickness-value').value,
+                insulin: document.getElementById('insulin-value').value,
+                diabetesPedigreeFunction: document.getElementById('diabetesPedigreeFunction-value').value
+            });
+        } else {
+            // 전문가용 모드에서 필수 입력값 검증
+            const requiredFields = [
+                { id: 'glucose-expert', name: '포도당 농도' },
+                { id: 'bloodPressure-expert', name: '혈압' },
+                { id: 'skinThickness-expert', name: '피부 두께' },
+                { id: 'insulin-expert', name: '인슐린' },
+                { id: 'bmi-expert', name: '체질량지수 (BMI)' },
+                { id: 'diabetesPedigreeFunction-expert', name: '당뇨병 가족력 함수' },
+                { id: 'age-expert', name: '나이' }
+            ];
+            
+            for (const field of requiredFields) {
+                const value = document.getElementById(field.id).value;
+                if (!value || value <= 0) {
+                    alert(`${field.name}를 올바르게 입력해주세요.`);
+                    e.preventDefault();
+                    return;
+                }
+            }
+            
+            console.log('전문가용 폼 제출:', {
+                mode: currentMode,
+                pregnancies: document.getElementById('pregnancies-expert').value,
+                glucose: document.getElementById('glucose-expert').value,
+                bloodPressure: document.getElementById('bloodPressure-expert').value,
+                skinThickness: document.getElementById('skinThickness-expert').value,
+                insulin: document.getElementById('insulin-expert').value,
+                bmi: document.getElementById('bmi-expert').value,
+                diabetesPedigreeFunction: document.getElementById('diabetesPedigreeFunction-expert').value,
+                age: document.getElementById('age-expert').value
+            });
+        }
+    });
+    
+    // 초기화: 페이지 로드 시 활성 모드에 맞게 필드 상태 설정
+    toggleModeFields();
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>오늘의 야외 운동 지수</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/weather.css">
+    <style>
+    	@font-face {
+	        font-family: 'HakgyoansimChilpanjiugaeB';
+	        src: url('fonts/Hakgyoansim_Chilpanjiugae_TTF_B.ttf') format('truetype');
+	        font-weight: bold;
+	        font-style: normal;
+	    }
+	
+	    /* 전체 적용 */
+	    * {
+	        font-family: 'HakgyoansimChilpanjiugaeB', sans-serif !important;
+	        font-size: 24px !important;
+	    }
+	
+	    html, body {
+	        font-family: 'HakgyoansimChilpanjiugaeB', sans-serif !important;
+	        font-size: 24px !important;
+	    }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-running"></i> 오늘의 야외 운동 지수</h1>
+            <p>현재 위치 기반으로 날씨와 미세먼지 정보를 종합하여 운동 적합성을 알려드립니다</p>
+        </header>
+
+        <div class="main-controls">
+            <button id="getInfoBtn" class="primary-btn">
+                <i class="fas fa-location-arrow"></i> 내 위치 기반 정보 조회
+            </button>
+        </div>
+
+        <div id="loadingIndicator">
+            <div class="loading-spinner"></div>
+            <p>정보를 불러오는 중...</p>
+        </div>
+
+        <div id="errorMessage">
+            <i class="fas fa-exclamation-triangle"></i>
+            <p>데이터를 불러오지 못했습니다. 잠시 후 다시 시도해주세요.</p>
+        </div>
+
+        <div class="content-wrapper">
+            <!-- 지도와 위치 정보 섹션 -->
+            <section id="locationSection" class="info-section">
+                <h2><i class="fas fa-map-marker-alt"></i> 현재 위치</h2>
+                <div id="locationInfo" class="location-info">
+                    <div id="map" class="map-container"></div>
+                    <div id="addressInfo">
+                        <p><strong>주소:</strong> <span id="currentAddress">-</span></p>
+                        <p><strong>좌표:</strong> <span id="coordinates">-</span></p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 날씨 정보 섹션 -->
+            <section id="weatherSection" class="info-section">
+                <h2><i class="fas fa-cloud-sun"></i> 날씨 정보</h2>
+                <div id="weatherInfo" class="weather-info"></div>
+            </section>
+
+            <!-- 미세먼지 정보 섹션 -->
+            <section id="dustSection" class="info-section">
+                <h2><i class="fas fa-wind"></i> 미세먼지 정보</h2>
+                <div class="dust-controls">
+                    <select id="regionSelect">
+                        <option value="서울">서울</option>
+                        <option value="인천">인천</option>
+                        <option value="경기">경기</option>
+                        <option value="강원">강원</option>
+                        <option value="충북">충북</option>
+                        <option value="충남">충남</option>
+                        <option value="대전" selected>대전</option>
+                        <option value="세종">세종</option>
+                        <option value="전북">전북</option>
+                        <option value="전남">전남</option>
+                        <option value="광주">광주</option>
+                        <option value="대구">대구</option>
+                        <option value="경북">경북</option>
+                        <option value="경남">경남</option>
+                        <option value="울산">울산</option>
+                        <option value="부산">부산</option>
+                        <option value="제주">제주</option>
+                    </select>
+                </div>
+                <div id="dustInfo" class="dust-info"></div>
+            </section>
+
+            <!-- 종합 평가 및 추천 섹션 -->
+            <section id="recommendationSection" class="info-section recommendation">
+                <h2><i class="fas fa-thumbs-up"></i> 야외 운동 종합 평가</h2>
+                <div id="recommendationInfo" class="recommendation-info"></div>
+            </section>
+
+            <!-- 시간대별 미세먼지 예측 -->
+            <section id="dustForecastSection" class="info-section">
+                <h2><i class="fas fa-clock"></i> 시간대별 미세먼지 예측</h2>
+                <button id="toggleGalleryBtn" class="secondary-btn">
+                    <i class="fas fa-chevron-down"></i> 시간대별 공기질 예측 보기
+                </button>
+                <div id="imageGallery" class="image-gallery">
+                    <div class="gallery-grid" id="forecastImages"></div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <!-- Kakao Maps API -->
+    <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=2477856358d728b82dcd21bf2ffa4b9f&libraries=services"></script>
+    <script src="js/weather.js"></script>
+</body>
+</html>

@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>식품 효능 정보</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/effect.css">
+    <style>
+    	@font-face {
+	        font-family: 'HakgyoansimChilpanjiugaeB';
+	        src: url('fonts/Hakgyoansim_Chilpanjiugae_TTF_B.ttf') format('truetype');
+	        font-weight: bold;
+	        font-style: normal;
+	    }
+	
+	    /* 전체 적용 */
+	    * {
+	        font-family: 'HakgyoansimChilpanjiugaeB', sans-serif !important;
+	        font-size: 24px !important;
+	    }
+	
+	    html, body {
+	        font-family: 'HakgyoansimChilpanjiugaeB', sans-serif !important;
+	        font-size: 24px !important;
+	    }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>식품 효능 정보</h1>
+            <div class="section-label">건강한 식품 정보</div>
+        </div>
+        
+        <div class="main-content">
+            <div class="categories">
+                <div class="category-group">
+                    <h2>🩸 심혈관·혈액 건강</h2>
+                    <ul>
+                        <li><button class="efficacy-btn" data-code="H001">혈행개선</button></li>
+                        <li><button class="efficacy-btn" data-code="H008">혈압개선</button></li>
+                        <li><button class="efficacy-btn" data-code="H031">항균</button></li>
+                        <li><button class="efficacy-btn" data-code="H034">피부건강 (혈류 관련)</button></li>
+                        <li><button class="efficacy-btn" data-code="H035">월경전증후군 완화</button></li>
+                        <li><button class="efficacy-btn" data-code="H050">근력강화</button></li>
+                        <li><button class="efficacy-btn" data-code="H026">관절건강</button></li>
+                    </ul>
+                </div>
+
+                <div class="category-group">
+                    <h2>🧠 인지·신경·정신 건강</h2>
+                    <ul>
+                        <li><button class="efficacy-btn" data-code="H002">치매</button></li>
+                        <li><button class="efficacy-btn" data-code="H004">뇌건강</button></li>
+                        <li><button class="efficacy-btn" data-code="H005">신경보호</button></li>
+                        <li><button class="efficacy-btn" data-code="H014">스트레스/불안완화</button></li>
+                        <li><button class="efficacy-btn" data-code="H017">기억력향상</button></li>
+                        <li><button class="efficacy-btn" data-code="H027">인지능력향상</button></li>
+                    </ul>
+                </div>
+
+                <div class="category-group">
+                    <h2>🦠 면역·항산화·항염</h2>
+                    <ul>
+                        <li><button class="efficacy-btn" data-code="H006">류마티스성 관절염</button></li>
+                        <li><button class="efficacy-btn" data-code="H013">면역과민억제</button></li>
+                        <li><button class="efficacy-btn" data-code="H015">항당뇨</button></li>
+                        <li><button class="efficacy-btn" data-code="H018">면역증진</button></li>
+                        <li><button class="efficacy-btn" data-code="H019">건강균</button></li>
+                        <li><button class="efficacy-btn" data-code="H038">항암</button></li>
+                        <li><button class="efficacy-btn" data-code="H043">성기능</button></li>
+                        <li><button class="efficacy-btn" data-code="H025">항염증</button></li>
+                        <li><button class="efficacy-btn" data-code="H052">항균염</button></li>
+                    </ul>
+                </div>
+                
+                <div class="category-group">
+                    <h2>🧘 소화·대사·내장 건강</h2>
+                    <ul>
+                        <li><button class="efficacy-btn" data-code="H020">위장건강</button></li>
+                        <li><button class="efficacy-btn" data-code="H021">운동수행능력 향상</button></li>
+                        <li><button class="efficacy-btn" data-code="H022">위건강</button></li>
+                        <li><button class="efficacy-btn" data-code="H028">장건강</button></li>
+                        <li><button class="efficacy-btn" data-code="H032">소화기계건강</button></li>
+                        <li><button class="efficacy-btn" data-code="H044">통증개선</button></li>
+                        <li><button class="efficacy-btn" data-code="H045">여성건강</button></li>
+                        <li><button class="efficacy-btn" data-code="H046">남성건강</button></li>
+                    </ul>
+                </div>
+
+                <div class="category-group">
+                    <h2>❤️ 심장·순환기 건강</h2>
+                    <ul>
+                        <li><button class="efficacy-btn" data-code="H007">심장보호</button></li>
+                        <li><button class="efficacy-btn" data-code="H009">심장건강</button></li>
+                        <li><button class="efficacy-btn" data-code="H012">이뇨작용 개선</button></li>
+                        <li><button class="efficacy-btn" data-code="H003">뇌건강 (혈류 관련)</button></li>
+                        <li><button class="efficacy-btn" data-code="H030">중금속 배출</button></li>
+                        <li><button class="efficacy-btn" data-code="H040">호흡기 건강</button></li>
+                    </ul>
+                </div>
+
+                <div class="category-group">
+                    <h2>💅 피부·외모·노화방지</h2>
+                    <ul>
+                        <li><button class="efficacy-btn" data-code="H033">눈건강</button></li>
+                        <li><button class="efficacy-btn" data-code="H036">뼈건강</button></li>
+                        <li><button class="efficacy-btn" data-code="H037">치아건강</button></li>
+                        <li><button class="efficacy-btn" data-code="H039">갱년기여성건강</button></li>
+                        <li><button class="efficacy-btn" data-code="H041">남성 생식기 건강</button></li>
+                        <li><button class="efficacy-btn" data-code="H042">숙취해소</button></li>
+                        <li><button class="efficacy-btn" data-code="H047">숙취해소</button></li>
+                        <li><button class="efficacy-btn" data-code="H024">항피로</button></li>
+                    </ul>
+                </div>
+
+                <div class="category-group">
+                    <h2>🧪 기타</h2>
+                    <ul>
+                        <li><button class="efficacy-btn" data-code="H010">면역과민억제</button></li>
+                        <li><button class="efficacy-btn" data-code="H011">소화촉진</button></li>
+                        <li><button class="efficacy-btn" data-code="H016">항비만</button></li>
+                        <li><button class="efficacy-btn" data-code="H023">항피로</button></li>
+                        <li><button class="efficacy-btn" data-code="H029">지질개선</button></li>
+                        <li><button class="efficacy-btn" data-code="H048">대사증후군완화</button></li>
+                        <li><button class="efficacy-btn" data-code="H049">대사증후군완화</button></li>
+                        <li><button class="efficacy-btn" data-code="H999">기타</button></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="results-section">
+            <div class="results-container">
+                <div class="selected-info" id="selected-efficacy">
+                    <span class="selected-info-icon">💡</span>
+                    효능을 선택하면 관련 식품이 여기에 표시됩니다
+                </div>
+                <div class="loading" id="loading">데이터를 불러오는 중...</div>
+                <div id="results" class="food-results"></div>
+                <div id="thesis-container" class="thesis-container">
+                    <h3 id="selected-food-title">선택된 식품의 논문 정보</h3>
+                    <div id="thesis-results" class="thesis-list"></div>
+                </div>
+                <div id="pagination" class="pagination"></div>
+                <div class="api-info">데이터 제공: 공공데이터포털 농식품 기능성 효능 정보</div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/effect.js"></script>
+</body>
+</html>
