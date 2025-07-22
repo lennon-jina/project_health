@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.health.my.mapper.ImageMapper">
+
+    <insert id="insertImage" parameterType="com.health.my.dto.ImageDto">
+        INSERT INTO IMAGES (
+            image_id,
+            board_id,
+            original_name,
+            saved_path,
+            file_size,
+            created_at
+        ) VALUES (
+            SEQ_IMAGES.NEXTVAL,
+            #{boardId},
+            #{originalName},
+            #{savedPath},
+            #{fileSize},
+            SYSTIMESTAMP
+        )
+        <selectKey keyProperty="imageId" resultType="java.lang.Long" order="AFTER">
+            SELECT SEQ_IMAGES.CURRVAL FROM DUAL
+        </selectKey>
+    </insert>
+    
+    <select id="findImagesByBoardId" parameterType="java.lang.Long" resultType="com.health.my.dto.ImageDto">
+        SELECT 
+            image_id AS imageId,
+            board_id AS boardId,
+            original_name AS originalName,
+            saved_path AS savedPath,
+            file_size AS fileSize,
+            TO_CHAR(created_at, 'YYYY-MM-DD HH24:MI:SS') AS createdAt
+        FROM IMAGES
+        WHERE board_id = #{boardId}
+        ORDER BY image_id ASC
+    </select>
+    
+    <select id="findImageById" parameterType="java.lang.Long" resultType="com.health.my.dto.ImageDto">
+        SELECT 
+            image_id AS imageId,
+            board_id AS boardId,
+            original_name AS originalName,
+            saved_path AS savedPath,
+            file_size AS fileSize,
+            TO_CHAR(created_at, 'YYYY-MM-DD HH24:MI:SS') AS createdAt
+        FROM IMAGES
+        WHERE image_id = #{imageId}
+    </select>
+    
+    <delete id="deleteImage" parameterType="java.lang.Long">
+        DELETE FROM IMAGES WHERE image_id = #{imageId}
+    </delete>
+    
+    <delete id="deleteImagesByBoardId" parameterType="java.lang.Long">
+        DELETE FROM IMAGES WHERE board_id = #{boardId}
+    </delete>
+    
+</mapper>
