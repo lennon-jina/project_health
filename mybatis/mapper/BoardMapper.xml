@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.health.my.mapper.BoardMapper">
+
+    <!-- 결과 매핑 -->
+    <resultMap id="BoardResultMap" type="com.health.my.dto.BoardDto">
+        <id property="boardId" column="board_id"/>
+        <result property="userId" column="user_id"/>
+        <result property="username" column="username"/>
+        <result property="nickname" column="nickname"/>
+        <result property="categoryId" column="category_id"/>
+        <result property="categoryName" column="category_name"/>
+        <result property="title" column="title"/>
+        <result property="content" column="content"/>
+        <result property="viewCount" column="view_count"/>
+        <result property="likeCount" column="like_count"/>
+        <result property="commentCount" column="comment_count"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+    </resultMap>
+
+    <!-- 게시글 목록 조회 -->
+    <select id="findAll" resultMap="BoardResultMap">
+        SELECT 
+            b.board_id, b.user_id, u.username, u.nickname,
+            b.category_id, c.category_name, b.title, b.content,
+            b.view_count, b.like_count, b.comment_count,
+            TO_CHAR(b.created_at, 'YYYY-MM-DD HH24:MI:SS') as created_at,
+            TO_CHAR(b.updated_at, 'YYYY-MM-DD HH24:MI:SS') as updated_at
+        FROM 
+            BOARDS b
+            JOIN USERS u ON b.user_id = u.user_id
+            JOIN CATEGORIES c ON b.category_id = c.category_id
+        ORDER BY 
+            b.board_id DESC
+    </select>
+
+    <!-- 카테고리별 게시글 목록 조회 -->
+    <select id="findByCategory" resultMap="BoardResultMap">
+        SELECT 
+            b.board_id, b.user_id, u.username, u.nickname,
+            b.category_id, c.category_name, b.title, b.content,
+            b.view_count, b.like_count, b.comment_count,
+            TO_CHAR(b.created_at, 'YYYY-MM-DD HH24:MI:SS') as created_at,
+            TO_CHAR(b.updated_at, 'YYYY-MM-DD HH24:MI:SS') as updated_at
+        FROM 
+            BOARDS b
+            JOIN USERS u ON b.user_id = u.user_id
+            JOIN CATEGORIES c ON b.category_id = c.category_id
+        WHERE 
+            b.category_id = #{categoryId}
+        ORDER BY 
+            b.board_id DESC
+    </select>
+
+    <!-- 게시글 상세 조회 -->
+    <select id="findById" resultMap="BoardResultMap">
+        SELECT 
+            b.board_id, b.user_id, u.username, u.nickname,
+            b.category_id, c.category_name, b.title, b.content,
+            b.view_count, b.like_count, b.comment_count,
+            TO_CHAR(b.created_at, 'YYYY-MM-DD HH24:MI:SS') as created_at,
+            TO_CHAR(b.updated_at, 'YYYY-MM-DD HH24:MI:SS') as updated_at
+        FROM 
+            BOARDS b
+            JOIN USERS u ON b.user_id = u.user_id
+            JOIN CATEGORIES c ON b.category_id = c.category_id
+        WHERE 
+            b.board_id = #{boardId}
+    </select>
+
+    <!-- 사용자별 게시글 목록 조회 -->
+    <select id="findByUserId" resultMap="BoardResultMap">
+        SELECT 
+            b.board_id, b.user_id, u.username, u.nickname,
+            b.category_id, c.category_name, b.title, b.content,
+            b.view_count, b.like_count, b.comment_count,
+            TO_CHAR(b.created_at, 'YYYY-MM-DD HH24:MI:SS') as created_at,
+            TO_CHAR(b.updated_at, 'YYYY-MM-DD HH24:MI:SS') as updated_at
+        FROM 
+            BOARDS b
+            JOIN USERS u ON b.user_id = u.user_id
+            JOIN CATEGORIES c ON b.category_id = c.category_id
+        WHERE 
+            b.user_id = #{userId}
+        ORDER BY 
+            b.board_id DESC
+    </select>
+
+    <!-- 게시글 검색 (제목, 내용) -->
+    <select id="search" resultMap="BoardResultMap">
+        SELECT 
+            b.board_id, b.user_id, u.username, u.nickname,
+            b.category_id, c.category_name, b.title, b.content,
+            b.view_count, b.like_count, b.comment_count,
+            TO_CHAR(b.created_at, 'YYYY-MM-DD HH24:MI:SS') as created_at,
+            TO_CHAR(b.updated_at, 'YYYY-MM-DD HH24:MI:SS') as updated_at
+        FROM 
+            BOARDS b
+            JOIN USERS u ON b.user_id = u.user_id
+            JOIN CATEGORIES c ON b.category_id = c.category_id
+        WHERE 
+            (UPPER(b.title) LIKE UPPER('%' || #{keyword} || '%') OR
+             UPPER(b.content) LIKE UPPER('%' || #{keyword} || '%'))
+        ORDER BY 
+            b.board_id DESC
+    </select>
+    
+    <!-- 게시글 검색 (제목만) -->
+	<select id="searchByTitle" resultMap="BoardResultMap">
+	    SELECT 
+	        b.board_id, b.user_id, u.username, u.nickname,
+	        b.category_id, c.category_name, b.title, b.content,
+	        b.view_count, b.like_count, b.comment_count,
+	        TO_CHAR(b.created_at, 'YYYY-MM-DD HH24:MI:SS') as created_at,
+	        TO_CHAR(b.updated_at, 'YYYY-MM-DD HH24:MI:SS') as updated_at
+	    FROM 
+	        BOARDS b
+	        JOIN USERS u ON b.user_id = u.user_id
+	        JOIN CATEGORIES c ON b.category_id = c.category_id
+	    WHERE 
+	        UPPER(b.title) LIKE UPPER('%' || #{keyword} || '%')
+	    ORDER BY 
+	        b.board_id DESC
+	</select>
+	
+	<!-- 게시글 검색 (내용만) -->
+	<select id="searchByContent" resultMap="BoardResultMap">
+	    SELECT 
+	        b.board_id, b.user_id, u.username, u.nickname,
+	        b.category_id, c.category_name, b.title, b.content,
+	        b.view_count, b.like_count, b.comment_count,
+	        TO_CHAR(b.created_at, 'YYYY-MM-DD HH24:MI:SS') as created_at,
+	        TO_CHAR(b.updated_at, 'YYYY-MM-DD HH24:MI:SS') as updated_at
+	    FROM 
+	        BOARDS b
+	        JOIN USERS u ON b.user_id = u.user_id
+	        JOIN CATEGORIES c ON b.category_id = c.category_id
+	    WHERE 
+	        UPPER(b.content) LIKE UPPER('%' || #{keyword} || '%')
+	    ORDER BY 
+	        b.board_id DESC
+	</select>
+
+    <!-- 게시글 등록 -->
+    <insert id="insertBoard" parameterType="com.health.my.dto.BoardDto">
+        <selectKey keyProperty="boardId" resultType="Long" order="BEFORE">
+            SELECT SEQ_BOARDS.NEXTVAL FROM DUAL
+        </selectKey>
+        INSERT INTO BOARDS (
+            board_id, 
+            user_id, 
+            category_id, 
+            title, 
+            content, 
+            view_count, 
+            like_count, 
+            comment_count, 
+            created_at, 
+            updated_at
+        ) VALUES (
+            #{boardId}, 
+            #{userId}, 
+            #{categoryId}, 
+            #{title}, 
+            #{content}, 
+            0, 
+            0, 
+            0, 
+            SYSTIMESTAMP, 
+            SYSTIMESTAMP
+        )
+    </insert>
+
+    <!-- 게시글 수정 -->
+    <update id="updateBoard" parameterType="com.health.my.dto.BoardDto">
+        UPDATE BOARDS
+        SET 
+            category_id = #{categoryId},
+            title = #{title},
+            content = #{content},
+            updated_at = SYSTIMESTAMP
+        WHERE 
+            board_id = #{boardId}
+    </update>
+
+    <!-- 게시글 삭제 -->
+    <delete id="deleteBoard">
+        DELETE FROM BOARDS
+        WHERE board_id = #{boardId}
+    </delete>
+
+    <!-- 조회수 증가 -->
+    <update id="increaseViewCount">
+        UPDATE BOARDS
+        SET 
+            view_count = view_count + 1
+        WHERE 
+            board_id = #{boardId}
+    </update>
+</mapper>
